@@ -5,34 +5,42 @@ import com.backend.form_to_sheets_api.model.FormModel;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class FormService {
 
-    private final SheetsService googleSheetsService;
+    private final SheetsService sheetsService;
+    private final EmailService emailService;
+    private final TurnstileService turnstileService;
 
 
-    // Inyectamos el servicio específico de Google Sheets
-    public FormService(SheetsService googleSheetsService) {
-        this.googleSheetsService = googleSheetsService;
-    }
+    public void processVolunteerApplication(FormRequestDto requestDto, String clientIp) {
 
-    public void processVolunteerApplication(FormRequestDto requestDto) {
-        // 1. Opcional: Podrías enriquecer los datos, por ejemplo, agregando la fecha y hora actual de registro
+        // 1. Validar el token de Turnstile
+        boolean isValid = turnstileService.verifyToken(requestDto.getTurnstileToken(), clientIp);
+
+        if (!isValid) {
+            throw new SecurityException("Anti-bot validation failed. Please try again.");
+        }
+
+        // 2. Opcional: Podrías enriquecer los datos, por ejemplo, agregando la fecha y hora actual de registro
         String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        // 2. Pasamos los datos del DTO al modelo (o los enriquecemos)
-        // 2. falta agregar el datatime
+        // 3. Pasamos los datos del DTO al modelo (o los enriquecemos)
+        //  falta agregar el datatime
         FormModel formModel = new FormModel();
-        formModel.setName(requestDto.getName());
+        formModel.setFullname(requestDto.getFullName());
         formModel.setEmail(requestDto.getEmail());
         formModel.setPhone(requestDto.getPhone());
         formModel.setBirthdate(requestDto.getBirthdate());
         formModel.setResume(requestDto.getResume());
 
-        // 3. Llamar al servicio específico de Sheets para guardar la información allá
-        googleSheetsService.appendRowToSheet(formModel);
+        // 4. Llamar al servicio específico de Sheets para guardar la información allá
+        sheetsService.appendRowToSheet(formModel);
 
-        // Aquí podrías agregar más llamadas a otros servicios generales (ej: EmailService)
+        // 5. Llamar al servicio específico EmailNotification
+        emailService.sendBookingNotification(requestDto.getEmail(),requestDto.getFullName());
     }
 }
