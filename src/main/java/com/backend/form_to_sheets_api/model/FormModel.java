@@ -3,18 +3,31 @@ package com.backend.form_to_sheets_api.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 
 
 @Getter @Setter
 public class FormModel {
-    private long id;
-    private String fullname;
-    private String email;
+    private String id; //
+    private String fullName;//
+    private String nameOfOrganization;//
+    private String position;//
+    private String address;
     private String phone;
-    private LocalDateTime birthdate;
-    private String resume;
+    private String email;
+    private String membershipType;
+    private String fullAlternateName;
+    private String alternatePosition;
+    private String alternatePhoneNumber;
+    private String paymentMethod;
+    private String contactSharingConsent;
+    private String externalOrgSharingConsent;
+    private String organizationInfo;
+    private String entreUsageCapacity;
+    private String officeWaitingListConsent;
+    private String requireBuildingKey;
+    private String digitalSignature;
+    private String registrationDate;
 
 
 

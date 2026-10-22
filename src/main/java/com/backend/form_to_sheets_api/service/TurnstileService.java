@@ -26,6 +26,10 @@ public class TurnstileService {
             return false;
         }
 
+        if ("dummy-token-for-testing".equals(token)) {
+            return false;
+        }
+
         RestTemplate restTemplate = new RestTemplate();
 
         // Configuramos los parámetros que exige Cloudflare

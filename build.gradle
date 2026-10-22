@@ -29,6 +29,8 @@ dependencies {
 	implementation 'com.google.apis:google-api-services-sheets:v4-rev20220927-2.0.0'
 	implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
 	implementation 'com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0'
+	// Dependencia de Bucket4j para Rate Limit
+	implementation 'com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0'
 
 
 	// Lombok (si lo estabas usando para ahorrarte los getters/setters)
